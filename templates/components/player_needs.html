@@ -1,0 +1,12 @@
+<input type="hidden" name="player_uuid" value="{{ player.uuid }}" />
+{% for turn, items_obj in player.needed_items().items() %}
+<div>
+    <pre>{{ turn }}</pre>
+    {% for item in items_obj['gear'] %}
+    <pre>{{ item }}</pre>
+    {% endfor %}
+    {% for item in items_obj['upgrades'] %}
+    <pre>{{ item }}</pre>
+    {% endfor %}
+</div>
+{% endfor %}

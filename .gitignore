@@ -1,0 +1,15 @@
+static/
+*.db
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# rust
+target/
+
+# python
+__pycache__/

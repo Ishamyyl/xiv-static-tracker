@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block body %}
+{% include "partials/index.html" with context %}
+{% endblock body %}
+
+<!-- trick tailwind into compiling these classes, which are dynamically added during render.
+     this chunk is outside any block, so jinja doesn't parse it -->
+<div class="bg-purple-200" />
+<div class="bg-purple-300" />
+<div class="bg-blue-200" />
+<div class="bg-blue-300" />
+<div class="bg-blue-400" />
+<div class="bg-green-200" />
+<div class="bg-green-300" />
+<div class="bg-orange-200" />
+<div class="bg-orange-300" />

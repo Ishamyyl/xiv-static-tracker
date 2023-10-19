@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "xiv-static-tracker"
+version = "0.1.0"
+description = ""
+authors = ["ishamyyl <ross.hodapp@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+starlette = "^0.31.1"
+uvicorn = {version = "^0.23.2", extras = ["standard"]}
+jinja2 = "^3.1.2"
+python-multipart = "^0.0.6"
+itsdangerous = "^2.1.2"
+tortoise-orm = "^0.20.0"
+
+[tool.pyright]
+venvPath = "/home/zen/.cache/pypoetry/virtualenvs/"
+venv = "xiv-static-tracker-BEsc8ryA-py3.11"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

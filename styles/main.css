@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+
+.desired-current {
+    grid-template-columns: [desired] 1fr [icon] 3ch [current] 1fr;
+    column-gap: 0.5rem;
+}
+
+@tailwind utilities;
