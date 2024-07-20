@@ -1,4 +1,4 @@
-static/
+#static/
 *.db
 
 # dotenv environment variable files
