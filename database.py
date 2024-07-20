@@ -1,9 +1,14 @@
 from enum import ReprEnum
 
-from tortoise.fields import CharEnumField, CharField, ForeignKeyField, ForeignKeyRelation, ReverseRelation, UUIDField
+from tortoise.fields import (
+    CharEnumField,
+    CharField,
+    ForeignKeyField,
+    ForeignKeyRelation,
+    ReverseRelation,
+    UUIDField,
+)
 from tortoise.models import Model
-from tortoise.manager import Manager
-from tortoise.queryset import QuerySet
 
 
 class Job(str, ReprEnum):
@@ -21,12 +26,14 @@ class Job(str, ReprEnum):
     MNK = "MNK"
     SAM = "SAM"
     NIN = "NIN"
+    VPR = "VPR"
     BRD = "BRD"
     MCH = "MCH"
     DNC = "DNC"
     BLM = "BLM"
     SMN = "SMN"
     RDM = "RDM"
+    PCT = "PCT"
     WHM = "WHM"
     SCH = "SCH"
     AST = "AST"
@@ -105,7 +112,9 @@ class Group(NameMixin, UUIDBase):
 
 
 class Player(NameMixin, UUIDBase):
-    group: ForeignKeyRelation[Group] = ForeignKeyField("app.Group", related_name="players")
+    group: ForeignKeyRelation[Group] = ForeignKeyField(
+        "app.Group", related_name="players"
+    )
     job = CharEnumField(Job, default=Job.TANK)
 
     gearset: ReverseRelation["Gear"]
@@ -130,7 +139,13 @@ class Player(NameMixin, UUIDBase):
             if s.current != s.desired:
                 if s.desired == Quality.SAVAGE:
                     match s.slot:
-                        case Slot.EARRINGS | Slot.NECKLACE | Slot.BRACELETS | Slot.RING_1 | Slot.RING_2:
+                        case (
+                            Slot.EARRINGS
+                            | Slot.NECKLACE
+                            | Slot.BRACELETS
+                            | Slot.RING_1
+                            | Slot.RING_2
+                        ):
                             turn = 1
                         case Slot.HEAD | Slot.HANDS | Slot.FEET:
                             turn = 2
@@ -141,7 +156,13 @@ class Player(NameMixin, UUIDBase):
                     r[turn]["gear"].append(s.slot)
                 elif s.desired == Quality.TOME_UP:
                     match s.slot:
-                        case Slot.EARRINGS | Slot.NECKLACE | Slot.BRACELETS | Slot.RING_1 | Slot.RING_2:
+                        case (
+                            Slot.EARRINGS
+                            | Slot.NECKLACE
+                            | Slot.BRACELETS
+                            | Slot.RING_1
+                            | Slot.RING_2
+                        ):
                             r[2]["upgrades"].append(UpgradeItem.SHINE)
                         case Slot.HEAD | Slot.HANDS | Slot.FEET | Slot.LEGS | Slot.BODY:
                             r[3]["upgrades"].append(UpgradeItem.TWINE)
@@ -153,7 +174,9 @@ class Player(NameMixin, UUIDBase):
 
 
 class Gear(UUIDBase):
-    player: ForeignKeyRelation[Player] = ForeignKeyField("app.Player", related_name="gearset")
+    player: ForeignKeyRelation[Player] = ForeignKeyField(
+        "app.Player", related_name="gearset"
+    )
     slot = CharEnumField(Slot, index=True)
     desired = CharEnumField(Quality, default=Quality.PREVIOUS)
     current = CharEnumField(Quality, default=Quality.PREVIOUS)
