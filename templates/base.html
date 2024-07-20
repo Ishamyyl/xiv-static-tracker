@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <title>XIV Static Gear Tracker</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="htmx-config" content='{"selfRequestsOnly":true,"allowScriptTags":false,"includeIndicatorStyles":false}' />
-        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO';" /> -->
-        <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet" />
-        <script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous"></script>
-        {% block head %}{% endblock head %}
-    </head>
+<head>
+    <title>XIV Static Gear Tracker</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="htmx-config"
+        content='{"selfRequestsOnly":true,"allowScriptTags":false,"includeIndicatorStyles":false}' />
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO';" /> -->
+    <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet" />
+    <script src="https://unpkg.com/htmx.org@2.0.1" crossorigin="anonymous"></script>
+    {% block head %}{% endblock head %}
+</head>
 
-    <body class="flex flex-wrap">
-        {% block body %}{% endblock body %}
-    </body>
+<body class="flex flex-wrap p-4">
+    {% block body %}{% endblock body %}
+</body>
 
 </html>

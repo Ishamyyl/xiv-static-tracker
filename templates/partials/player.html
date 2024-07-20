@@ -1,5 +1,6 @@
-<div class="min-w-max">
-    <form hx-patch="{{ request.app.url_path_for('players') }}" hx-trigger="input delay:1s" hx-sync="this:replace" class="flex justify-between">
+<div class="min-w-max border border-slate-100 border-solid p-4">
+    <form hx-patch="{{ request.app.url_path_for('players') }}" hx-trigger="input delay:1s" hx-sync="this:replace"
+        class="flex justify-between">
         {% include "components/player_details.html" with context %}
     </form>
     <div class="grid desired-current">
@@ -7,7 +8,8 @@
         {% include "partials/gear.html" with context %}
         {% endfor %}
     </div>
-    <form hx-get="{{ request.app.url_path_for('needs') }}" hx-trigger="reload-needs-{{ player.uuid }} from:body" hx-sync="this:replace" class="flex justify-evenly">
+    <form hx-get="{{ request.app.url_path_for('needs') }}" hx-trigger="reload-needs-{{ player.uuid }} from:body"
+        hx-sync="this:replace" class="flex justify-evenly">
         {% include "components/player_needs.html" with context %}
     </form>
 </div>
