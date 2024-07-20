@@ -9,9 +9,10 @@
         {% include "components/group_details.html" with context %}
     </form>
     <!-- <input type="text" readonly value="{{ url_for('groups') }}?group_uuid={{ group.uuid }}" /> -->
-    <form hx-post="{{ request.app.url_path_for('players') }}" hx-target="main" hx-swap="beforeend" hx-boost="true"
-        class="contents">
+    {% if group.players|length < 8 %} <form hx-post="{{ request.app.url_path_for('players') }}" hx-target="main"
+        hx-swap="beforeend" hx-boost="true" class="contents">
         <input type="hidden" name="group_uuid" value="{{ group.uuid }}" />
-        <input type="submit" value="+ Add Player" class="px-1 text-white no-underline bg-black  inline-block" />
-    </form>
+        <input type="submit" value="+ Add Player" class="px-1 text-white no-underline bg-black inline-block" />
+        </form>
+        {% endif %}
 </div>
