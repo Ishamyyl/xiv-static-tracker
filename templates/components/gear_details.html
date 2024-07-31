@@ -1,11 +1,12 @@
-<input type="hidden" name="gear_uuid" value="{{ gear.uuid }}">
+<input type="hidden" name="gear_id" value="{{ gear.id }}">
 <select name="desired" class="appearance-none text-right">
     {% for q in Quality %}
     <option {% if gear.desired==q %}selected{% endif %}>{{ q }}</option>
     {% endfor %}
 </select>
 <pre class="text-center">{{ gear.slot }}</pre>
-<select name="current" class="appearance-none {% if gear.current != gear.desired %}{{ needs_color_mapping[gear.current] }}{% endif %}">
+<select name="current"
+    class="appearance-none {% if gear.current != gear.desired %}{{ needs_color_mapping[gear.current] }}{% endif %}">
     {% for q in Quality %}
     <option {% if gear.current==q %}selected{% endif %}>{{ q }}</option>
     {% endfor %}

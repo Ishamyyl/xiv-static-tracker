@@ -6,7 +6,7 @@ from tortoise.fields import (
     ForeignKeyField,
     ForeignKeyRelation,
     ReverseRelation,
-    UUIDField,
+    IntField,
 )
 from tortoise.models import Model
 
@@ -88,8 +88,8 @@ class UpgradeItem(str, ReprEnum):
     TOMESTONE = "📱"
 
 
-class UUIDBase(Model):
-    uuid = UUIDField(pk=True)
+class IntIdBase(Model):
+    id = IntField(pk=True)
 
     class Meta:
         abstract = True
@@ -99,19 +99,19 @@ class NameMixin:
     name = CharField(64, default="")
 
 
-class Group(NameMixin, UUIDBase):
+class Group(NameMixin, IntIdBase):
     description = CharField(64, default="")
 
     players: ReverseRelation["Player"]
 
     def __str__(self) -> str:
-        return f"<Group {self.uuid}>"
+        return f"<Group {self.id}>"
 
     class Meta:
         table = "groups"
 
 
-class Player(NameMixin, UUIDBase):
+class Player(NameMixin, IntIdBase):
     group: ForeignKeyRelation[Group] = ForeignKeyField(
         "app.Group", related_name="players"
     )
@@ -173,7 +173,7 @@ class Player(NameMixin, UUIDBase):
         return r
 
 
-class Gear(UUIDBase):
+class Gear(IntIdBase):
     player: ForeignKeyRelation[Player] = ForeignKeyField(
         "app.Player", related_name="gearset"
     )
@@ -181,7 +181,7 @@ class Gear(UUIDBase):
     desired = CharEnumField(Quality, default=Quality.PREVIOUS)
     current = CharEnumField(Quality, default=Quality.PREVIOUS)
 
-    player_id: UUIDField
+    player_id: IntField
 
     def __str__(self) -> str:
         return f"<Gear {self.slot} ({self.desired} ⇐ {self.current})>"

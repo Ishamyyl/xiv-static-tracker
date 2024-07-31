@@ -8,7 +8,7 @@
         {% include "partials/gear.html" with context %}
         {% endfor %}
     </div>
-    <form hx-get="{{ request.app.url_path_for('needs') }}" hx-trigger="reload-needs-{{ player.uuid }} from:body"
+    <form hx-get="{{ request.app.url_path_for('needs') }}" hx-trigger="reload-needs-{{ player.id }} from:body"
         hx-sync="this:replace" class="flex justify-evenly">
         {% include "components/player_needs.html" with context %}
     </form>

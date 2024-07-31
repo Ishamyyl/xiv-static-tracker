@@ -37,7 +37,7 @@ async def index(req: Request):
 
 class Gears(HTTPEndpoint):
     async def get(self, req: Request):
-        if g := await Gear.filter(uuid=req.query_params["gear_uuid"]).first():
+        if g := await Gear.filter(id=req.query_params["gear_id"]).first():
             return templates.TemplateResponse(
                 "pages/gear.html", {"request": req, "gear": g}
             )
@@ -46,10 +46,10 @@ class Gears(HTTPEndpoint):
     async def patch(self, req: Request):
         async with req.form() as data:
             data = dict(data)
-            gs_uuid = data.pop("gear_uuid")
+            gs_id = data.pop("gear_id")
 
             # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
-            q = Gear.filter(uuid=gs_uuid).update(**data).sql() + " RETURNING *"
+            q = Gear.filter(id=gs_id).update(**data).sql() + " RETURNING *"
             async with in_transaction() as conn:
                 r = (await conn.execute_query_dict(q, list(data.values())))[0]
 
@@ -66,7 +66,7 @@ class Gears(HTTPEndpoint):
 class Players(HTTPEndpoint):
     async def get(self, req: Request):
         if (
-            p := await Player.filter(uuid=req.query_params["player_uuid"])
+            p := await Player.filter(id=req.query_params["player_id"])
             .prefetch_related("gearset")
             .first()
         ):
@@ -77,7 +77,7 @@ class Players(HTTPEndpoint):
 
     async def post(self, req: Request):
         async with req.form() as data:
-            p = Player(group_id=data["group_uuid"])
+            p = Player(group_id=data["group_id"])
 
             # TODO: database failure handling
             await p.save()
@@ -91,10 +91,10 @@ class Players(HTTPEndpoint):
     async def patch(self, req: Request):
         async with req.form() as data:
             data = dict(data)
-            p_uuid = str(data.pop("player_uuid"))
+            p_id = str(data.pop("player_id"))
 
             # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
-            q = Player.filter(uuid=p_uuid).update(**data).sql() + " RETURNING *"
+            q = Player.filter(id=p_id).update(**data).sql() + " RETURNING *"
             async with in_transaction() as conn:
                 r = (await conn.execute_query_dict(q, list(data.values())))[0]
 
@@ -108,7 +108,7 @@ class Players(HTTPEndpoint):
 
 async def needs(req: Request):
     if (
-        p := await Player.filter(uuid=req.query_params["player_uuid"])
+        p := await Player.filter(id=req.query_params["player_id"])
         .prefetch_related("gearset")
         .first()
     ):
@@ -121,7 +121,7 @@ async def needs(req: Request):
 class Groups(HTTPEndpoint):
     async def get(self, req: Request):
         if (
-            g := await Group.filter(uuid=req.query_params["group_uuid"])
+            g := await Group.filter(id=req.query_params["group_id"])
             .prefetch_related("players", "players__gearset")
             .first()
         ):
@@ -135,17 +135,17 @@ class Groups(HTTPEndpoint):
         # TODO: handle database failures
         await g.save()
         return RedirectResponse(
-            f'{req.url_for("groups")}?group_uuid={g.uuid}',
+            f'{req.url_for("groups")}?group_id={g.id}',
             status_code=HTTP_303_SEE_OTHER,
         )
 
     async def patch(self, req: Request):
         async with req.form() as data:
             data = dict(data)
-            g_uuid = data.pop("group_uuid")
+            g_id = data.pop("group_id")
 
             # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
-            q = Group.filter(uuid=g_uuid).update(**data).sql() + " RETURNING *"
+            q = Group.filter(id=g_id).update(**data).sql() + " RETURNING *"
             async with in_transaction() as conn:
                 r = (await conn.execute_query_dict(q, list(data.values())))[0]
 
