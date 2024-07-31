@@ -1,5 +1,5 @@
 #static/
-#*.db
+*.db
 
 # dotenv environment variable files
 .env
