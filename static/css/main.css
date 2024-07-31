@@ -560,6 +560,10 @@ video {
        column-gap: 0.5rem;
 }
 
+.test {
+  width: 70px;
+}
+
 .static {
   position: static;
 }
@@ -570,6 +574,10 @@ video {
 
 .inline-block {
   display: inline-block;
+}
+
+.inline {
+  display: inline;
 }
 
 .flex {
@@ -586,6 +594,31 @@ video {
 
 .hidden {
   display: none;
+}
+
+.w-auto {
+  width: auto;
+}
+
+.w-1 {
+  width: 0.25rem;
+}
+
+.w-4 {
+  width: 1rem;
+}
+
+.w-1\/4 {
+  width: 25%;
+}
+
+.w-min {
+  width: -moz-min-content;
+  width: min-content;
+}
+
+.w-5 {
+  width: 1.25rem;
 }
 
 .min-w-max {

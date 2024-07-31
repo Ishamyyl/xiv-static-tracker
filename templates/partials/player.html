@@ -4,7 +4,7 @@
         {% include "components/player_details.html" with context %}
     </form>
     <div class="grid desired-current">
-        {% for gear in player.gearset %}
+        {% for gear in player.gearset|sort(attribute='id') %}
         {% include "partials/gear.html" with context %}
         {% endfor %}
     </div>

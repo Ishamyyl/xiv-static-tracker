@@ -7,6 +7,7 @@ from tortoise.fields import (
     ForeignKeyRelation,
     ReverseRelation,
     IntField,
+    SmallIntField,
 )
 from tortoise.models import Model
 
@@ -116,6 +117,10 @@ class Player(NameMixin, IntIdBase):
         "app.Group", related_name="players"
     )
     job = CharEnumField(Job, default=Job.TANK)
+    books_1 = SmallIntField(default=0)
+    books_2 = SmallIntField(default=0)
+    books_3 = SmallIntField(default=0)
+    books_4 = SmallIntField(default=0)
 
     gearset: ReverseRelation["Gear"]
 
@@ -128,10 +133,10 @@ class Player(NameMixin, IntIdBase):
     def needed_items(self) -> dict:
         # async def needed_items(self) -> dict:
         r = {
-            1: {"gear": [], "upgrades": []},
-            2: {"gear": [], "upgrades": []},
-            3: {"gear": [], "upgrades": []},
-            4: {"gear": [], "upgrades": []},
+            1: {"gear": [], "upgrades": [], "books": self.books_1},
+            2: {"gear": [], "upgrades": [], "books": self.books_2},
+            3: {"gear": [], "upgrades": [], "books": self.books_3},
+            4: {"gear": [], "upgrades": [], "books": self.books_4},
         }
         # if not self.gearset._fetched:
         #     await self.fetch_related("gearset")
