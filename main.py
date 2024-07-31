@@ -1,5 +1,6 @@
 import logging
 from contextlib import asynccontextmanager
+from os import environ
 
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
@@ -20,6 +21,11 @@ templates.env.globals["Quality"] = Quality
 templates.env.globals["Job"] = Job
 templates.env.globals["Slot"] = Slot
 templates.env.globals["needs_color_mapping"] = needs_color_mapping
+
+
+DATABASE_URL = environ.get("DATABASE_URL", "sqlite://app.db").replace(
+    "postgres", "asyncpg"
+)
 
 
 async def index(req: Request):
@@ -157,7 +163,7 @@ async def test(req: Request):
 
 @asynccontextmanager
 async def lifespan(app: Starlette):
-    await Tortoise.init(db_url="sqlite://static/app.db", modules={"app": ["database"]})
+    await Tortoise.init(db_url=DATABASE_URL, modules={"app": ["database"]})
     await Tortoise.generate_schemas()
     yield
     await Tortoise.close_connections()
