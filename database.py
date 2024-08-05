@@ -113,9 +113,7 @@ class Group(NameMixin, IntIdBase):
 
 
 class Player(NameMixin, IntIdBase):
-    group: ForeignKeyRelation[Group] = ForeignKeyField(
-        "app.Group", related_name="players"
-    )
+    group: ForeignKeyRelation[Group] = ForeignKeyField("app.Group", related_name="players")
     job = CharEnumField(Job, default=Job.TANK)
     books_1 = SmallIntField(default=0)
     books_2 = SmallIntField(default=0)
@@ -133,10 +131,10 @@ class Player(NameMixin, IntIdBase):
     def needed_items(self) -> dict:
         # async def needed_items(self) -> dict:
         r = {
-            1: {"gear": [], "upgrades": [], "books": self.books_1},
-            2: {"gear": [], "upgrades": [], "books": self.books_2},
-            3: {"gear": [], "upgrades": [], "books": self.books_3},
-            4: {"gear": [], "upgrades": [], "books": self.books_4},
+            1: {"gear": [], "upgrades": []},
+            2: {"gear": [], "upgrades": []},
+            3: {"gear": [], "upgrades": []},
+            4: {"gear": [], "upgrades": []},
         }
         # if not self.gearset._fetched:
         #     await self.fetch_related("gearset")
@@ -144,13 +142,7 @@ class Player(NameMixin, IntIdBase):
             if s.current != s.desired:
                 if s.desired == Quality.SAVAGE:
                     match s.slot:
-                        case (
-                            Slot.EARRINGS
-                            | Slot.NECKLACE
-                            | Slot.BRACELETS
-                            | Slot.RING_1
-                            | Slot.RING_2
-                        ):
+                        case Slot.EARRINGS | Slot.NECKLACE | Slot.BRACELETS | Slot.RING_1 | Slot.RING_2:
                             turn = 1
                         case Slot.HEAD | Slot.HANDS | Slot.FEET:
                             turn = 2
@@ -161,13 +153,7 @@ class Player(NameMixin, IntIdBase):
                     r[turn]["gear"].append(s.slot)
                 elif s.desired == Quality.TOME_UP:
                     match s.slot:
-                        case (
-                            Slot.EARRINGS
-                            | Slot.NECKLACE
-                            | Slot.BRACELETS
-                            | Slot.RING_1
-                            | Slot.RING_2
-                        ):
+                        case Slot.EARRINGS | Slot.NECKLACE | Slot.BRACELETS | Slot.RING_1 | Slot.RING_2:
                             r[2]["upgrades"].append(UpgradeItem.SHINE)
                         case Slot.HEAD | Slot.HANDS | Slot.FEET | Slot.LEGS | Slot.BODY:
                             r[3]["upgrades"].append(UpgradeItem.TWINE)
@@ -179,9 +165,7 @@ class Player(NameMixin, IntIdBase):
 
 
 class Gear(IntIdBase):
-    player: ForeignKeyRelation[Player] = ForeignKeyField(
-        "app.Player", related_name="gearset"
-    )
+    player: ForeignKeyRelation[Player] = ForeignKeyField("app.Player", related_name="gearset")
     slot = CharEnumField(Slot, index=True)
     desired = CharEnumField(Quality, default=Quality.PREVIOUS)
     current = CharEnumField(Quality, default=Quality.PREVIOUS)

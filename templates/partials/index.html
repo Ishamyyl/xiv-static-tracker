@@ -1,12 +1,23 @@
 {% with path = request.app.url_path_for('groups') %}
 <main class="flex flex-col gap-4 flex-shrink-0">
-    <form hx-post="{{ path }}" hx-target="body" hx-push-url="true" hx-boost="true">
-        <input type="submit" value="Create New Group"
-            class="p-4 text-white no-underline bg-blue-500 hover:bg-blue-600" />
+    <form hx-post="{{ path }}"
+          hx-target="body"
+          hx-push-url="true"
+          hx-boost="true">
+        <input type="submit"
+               value="Create New Group"
+               class="p-4 text-white no-underline bg-blue-500 hover:bg-blue-600" />
     </form>
-    <form hx-get="{{ path }}" hx-target="body" hx-push-url="true" hx-boost="true">
-        <input type="text" name="group_id" class="border border-black" />
-        <input type="submit" value="Lookup" class="p-4 text-white no-underline bg-blue-500 hover:bg-blue-600" />
+    <form hx-get="{{ path }}"
+          hx-target="body"
+          hx-push-url="true"
+          hx-boost="true">
+        <input type="text"
+               name="group_id"
+               class="border border-black" />
+        <input type="submit"
+               value="Lookup"
+               class="p-4 text-white no-underline bg-blue-500 hover:bg-blue-600" />
     </form>
 </main>
 <nav>

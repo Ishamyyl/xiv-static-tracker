@@ -23,24 +23,18 @@ templates.env.globals["Slot"] = Slot
 templates.env.globals["needs_color_mapping"] = needs_color_mapping
 
 
-DATABASE_URL = environ.get("DATABASE_URL", "sqlite://app.db").replace(
-    "postgres", "asyncpg"
-)
+DATABASE_URL = environ.get("DATABASE_URL", "sqlite://app.db").replace("postgres", "asyncpg")
 
 
 async def index(req: Request):
     gs = await Group.all()
-    return templates.TemplateResponse(
-        "pages/index.html", {"request": req, "groups": gs}
-    )
+    return templates.TemplateResponse("pages/index.html", {"request": req, "groups": gs})
 
 
 class Gears(HTTPEndpoint):
     async def get(self, req: Request):
         if g := await Gear.filter(id=req.query_params["gear_id"]).first():
-            return templates.TemplateResponse(
-                "pages/gear.html", {"request": req, "gear": g}
-            )
+            return templates.TemplateResponse("pages/gear.html", {"request": req, "gear": g})
         raise HTTPException(HTTP_404_NOT_FOUND)
 
     async def patch(self, req: Request):
@@ -65,14 +59,8 @@ class Gears(HTTPEndpoint):
 
 class Players(HTTPEndpoint):
     async def get(self, req: Request):
-        if (
-            p := await Player.filter(id=req.query_params["player_id"])
-            .prefetch_related("gearset")
-            .first()
-        ):
-            return templates.TemplateResponse(
-                "pages/player.html", {"request": req, "player": p}
-            )
+        if p := await Player.filter(id=req.query_params["player_id"]).prefetch_related("gearset").first():
+            return templates.TemplateResponse("pages/player.html", {"request": req, "player": p})
         raise HTTPException(HTTP_404_NOT_FOUND)
 
     async def post(self, req: Request):
@@ -84,9 +72,7 @@ class Players(HTTPEndpoint):
             await Gear.bulk_create([Gear(slot=s, player=p) for s in Slot])
             await p.fetch_related("gearset")
 
-            return templates.TemplateResponse(
-                "partials/player.html", {"request": req, "player": p}
-            )
+            return templates.TemplateResponse("partials/player.html", {"request": req, "player": p})
 
     async def patch(self, req: Request):
         async with req.form() as data:
@@ -100,34 +86,20 @@ class Players(HTTPEndpoint):
 
             if r:
                 p = Player(**r)  # hydrate from raw cursor
-                return templates.TemplateResponse(
-                    "components/player_details.html", {"request": req, "player": p}
-                )
+                return templates.TemplateResponse("components/player_details.html", {"request": req, "player": p})
             raise HTTPException(HTTP_404_NOT_FOUND)
 
 
 async def needs(req: Request):
-    if (
-        p := await Player.filter(id=req.query_params["player_id"])
-        .prefetch_related("gearset")
-        .first()
-    ):
-        return templates.TemplateResponse(
-            "components/player_needs.html", {"request": req, "player": p}
-        )
+    if p := await Player.filter(id=req.query_params["player_id"]).prefetch_related("gearset").first():
+        return templates.TemplateResponse("components/player_needs.html", {"request": req, "player": p})
     raise HTTPException(HTTP_404_NOT_FOUND)
 
 
 class Groups(HTTPEndpoint):
     async def get(self, req: Request):
-        if (
-            g := await Group.filter(id=req.query_params["group_id"])
-            .prefetch_related("players", "players__gearset")
-            .first()
-        ):
-            return templates.TemplateResponse(
-                "pages/group.html", {"request": req, "group": g}
-            )
+        if g := await Group.filter(id=req.query_params["group_id"]).prefetch_related("players", "players__gearset").first():
+            return templates.TemplateResponse("pages/group.html", {"request": req, "group": g})
         raise HTTPException(HTTP_404_NOT_FOUND)
 
     async def post(self, req: Request):
@@ -151,9 +123,7 @@ class Groups(HTTPEndpoint):
 
             if r:
                 g = Group(**r)  # hydrate from raw cursor
-                return templates.TemplateResponse(
-                    "components/group_details.html", {"request": req, "group": g}
-                )
+                return templates.TemplateResponse("components/group_details.html", {"request": req, "group": g})
             raise HTTPException(HTTP_404_NOT_FOUND)
 
 
