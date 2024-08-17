@@ -2,6 +2,7 @@ import logging
 from contextlib import asynccontextmanager
 from os import environ
 
+from aerich import Command
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
 from starlette.exceptions import HTTPException
@@ -131,10 +132,24 @@ async def test(req: Request):
     return HTMLResponse("<p>test</p>")
 
 
+TORTOISE_CONFIG = {
+    "connections": {
+        "default": DATABASE_URL,
+    },
+    "apps": {
+        "app": {
+            "models": ["database", "aerich.models"],
+        },
+    },
+}
+
+
 @asynccontextmanager
 async def lifespan(app: Starlette):
-    await Tortoise.init(db_url=DATABASE_URL, modules={"app": ["database"]})
-    await Tortoise.generate_schemas()
+    await Tortoise.init(config=TORTOISE_CONFIG)
+    command = Command(tortoise_config=TORTOISE_CONFIG, app="app")
+    await command.init()
+    await command.upgrade(run_in_transaction=True)
     yield
     await Tortoise.close_connections()
 

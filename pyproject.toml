@@ -14,10 +14,16 @@ python-multipart = "^0.0.6"
 itsdangerous = "^2.1.2"
 tortoise-orm = "^0.20.0"
 asyncpg = "^0.29.0"
+aerich = "^0.7.2"
 
 [tool.pyright]
 venvPath = "/home/zen/.cache/pypoetry/virtualenvs/"
 venv = "xiv-static-tracker-BEsc8ryA-py3.11"
+
+[tool.aerich]
+tortoise_orm = "main.TORTOISE_CONFIG"
+location = "./migrations"
+src_folder = "./."
 
 [build-system]
 requires = ["poetry-core"]
