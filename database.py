@@ -102,6 +102,7 @@ class NameMixin:
 
 class Group(NameMixin, IntIdBase):
     description = CharField(64, default="")
+    tier = SmallIntField(default=1)
 
     players: ReverseRelation["Player"]
 
@@ -129,15 +130,12 @@ class Player(NameMixin, IntIdBase):
         table = "players"
 
     def needed_items(self) -> dict:
-        # async def needed_items(self) -> dict:
         r = {
             1: {"gear": [], "upgrades": []},
             2: {"gear": [], "upgrades": []},
             3: {"gear": [], "upgrades": []},
             4: {"gear": [], "upgrades": []},
         }
-        # if not self.gearset._fetched:
-        #     await self.fetch_related("gearset")
         for s in self.gearset:
             if s.current != s.desired:
                 if s.desired == Quality.SAVAGE:
