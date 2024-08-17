@@ -5,8 +5,7 @@
        placeholder="name"
        name="name"
        value="{{ group.name }}" />
-<input type="text"
-       placeholder="description"
-       name="description"
-       value="{{ group.description }}"
-       oninput="this.size = this.value.length" />
+<textarea name="description"
+          placeholder="description"
+          rows="10"
+          class="border border-slate-100 border-solid">{{ group.description }}</textarea>
