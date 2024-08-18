@@ -89,7 +89,7 @@ class Players(HTTPEndpoint):
 
 
 async def needs(req: Request):
-    if not (p := await Player.filter(id=req.path_params["player_id"]).prefetch_related("gearset").first()):
+    if not (p := await Player.filter(id=req.path_params["player_id"]).prefetch_related("gearset", "group").first()):
         raise HTTPException(HTTP_404_NOT_FOUND)
     return templates.TemplateResponse("components/player/needs.html", {"request": req, "player": p})
 
