@@ -4,15 +4,14 @@
     {% endfor %}
 </main>
 <div class="flex-1 flex flex-col gap-4 p-4">
-    <form hx-patch="{{ request.app.url_path_for('groups') }}"
+    <form hx-patch="{{ request.app.url_path_for('groups', group_id=group.id) }}"
           hx-trigger="input delay:1s"
           hx-sync="this:replace"
           hx-boost="true"
           class="contents">
         {% include "components/group_details.html" with context %}
     </form>
-    <!-- <input type="text" readonly value="{{ url_for('groups') }}?group_id={{ group.id }}" /> -->
-    {% if group.players|length < 8 %} <form hx-post="{{ request.app.url_path_for('players') }}"
+    {% if group.players|length < 8 %} <form hx-post="{{ request.app.url_path_for('players', player_id=0) }}"
           hx-target="main"
           hx-swap="beforeend"
           hx-boost="true"

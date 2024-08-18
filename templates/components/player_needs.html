@@ -1,6 +1,3 @@
-<input type="hidden"
-       name="player_id"
-       value="{{ player.id }}" />
 {% for turn, items_obj in player.needed_items().items() %}
 <div>
     <pre>{{ turn }}</pre>

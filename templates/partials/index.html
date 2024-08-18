@@ -1,29 +1,27 @@
-{% with path = request.app.url_path_for('groups') %}
 <main class="flex flex-col gap-4 flex-shrink-0">
-    <form hx-post="{{ path }}"
-          hx-target="body"
-          hx-push-url="true"
-          hx-boost="true">
-        <input type="submit"
-               value="Create New Group"
-               class="p-4 text-white no-underline bg-blue-500 hover:bg-blue-600" />
-    </form>
-    <form hx-get="{{ path }}"
-          hx-target="body"
-          hx-push-url="true"
-          hx-boost="true">
-        <input type="text"
-               name="group_id"
-               class="border border-black" />
-        <input type="submit"
-               value="Lookup"
-               class="p-4 text-white no-underline bg-blue-500 hover:bg-blue-600" />
-    </form>
+  <form hx-post="{{ request.app.url_path_for('groups', group_id=0) }}"
+        hx-target="body"
+        hx-push-url="true"
+        hx-boost="true">
+    <input type="submit"
+           value="Create New Group"
+           class="p-4 text-white no-underline bg-blue-500 hover:bg-blue-600" />
+  </form>
+  <form hx-get="{{ request.app.url_path_for('groups', group_id=0) }}"
+        hx-target="body"
+        hx-push-url="true"
+        hx-boost="true">
+    <input type="text"
+           name="group_id"
+           class="border border-black" />
+    <input type="submit"
+           value="Lookup"
+           class="p-4 text-white no-underline bg-blue-500 hover:bg-blue-600" />
+  </form>
 </main>
 <nav>
-    {% for g in groups %}
-    <p><a href="{{ path }}?group_id={{ g.id }}">{{ g.name or "None" }}</a></p>
-    {% endfor %}
-    <!-- <button hx-get="/test" hx-swap="outerhtml">lol</button> -->
+  {% for g in groups %}
+  <p><a href="{{request.app.url_path_for('groups', group_id=g.id) }}">{{ g.name or g.id }}</a></p>
+  {% endfor %}
+  <!-- <button hx-get="/test" hx-swap="outerhtml">lol</button> -->
 </nav>
-{% endwith %}

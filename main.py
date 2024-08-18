@@ -51,7 +51,7 @@ class Gears(HTTPEndpoint):
 
         g = Gear(**r)  # hydrate from raw cursor
         return templates.TemplateResponse(
-            "components/gear.html",
+            "components/gear_details.html",
             {"request": req, "gear": g},
             headers={"HX-Trigger": f"reload-needs-{g.player_id}"},
         )
@@ -72,7 +72,7 @@ class Players(HTTPEndpoint):
         await Gear.bulk_create([Gear(slot=s, player=p) for s in Slot])
         await p.fetch_related("gearset")
 
-        return templates.TemplateResponse("components/player.html", {"request": req, "player": p})
+        return templates.TemplateResponse("partials/player.html", {"request": req, "player": p})
 
     async def patch(self, req: Request):
         data = await req.form()
@@ -85,13 +85,13 @@ class Players(HTTPEndpoint):
         if not r:
             raise HTTPException(HTTP_404_NOT_FOUND)
         p = Player(**r)  # hydrate from raw cursor
-        return templates.TemplateResponse("components/player.html", {"request": req, "player": p})
+        return templates.TemplateResponse("components/player_details.html", {"request": req, "player": p})
 
 
 async def needs(req: Request):
     if not (p := await Player.filter(id=req.path_params["player_id"]).prefetch_related("gearset").first()):
         raise HTTPException(HTTP_404_NOT_FOUND)
-    return templates.TemplateResponse("components/needs.html", {"request": req, "player": p})
+    return templates.TemplateResponse("components/player_needs.html", {"request": req, "player": p})
 
 
 class Groups(HTTPEndpoint):
@@ -107,11 +107,10 @@ class Groups(HTTPEndpoint):
         return RedirectResponse(req.url_for("groups", group_id=g.id), status_code=HTTP_303_SEE_OTHER)
 
     async def patch(self, req: Request):
-        data = dict(await req.form())  # returns an "immutable multidict", so convert for .pop() convenience, see: https://www.starlette.io/requests/#request-files
-        g_id = data.pop("group_id")
+        data = await req.form()
 
         # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
-        q = Group.filter(id=g_id).update(**data).sql() + " RETURNING *"
+        q = Group.filter(id=req.path_params["group_id"]).update(**data).sql() + " RETURNING *"
         async with in_transaction() as conn:
             r = (await conn.execute_query_dict(q, list(data.values())))[0]
 
@@ -119,7 +118,7 @@ class Groups(HTTPEndpoint):
             raise HTTPException(HTTP_404_NOT_FOUND)
 
         g = Group(**r)  # hydrate from raw cursor
-        return templates.TemplateResponse("components/group.html", {"request": req, "group": g})
+        return templates.TemplateResponse("components/group_details.html", {"request": req, "group": g})
 
 
 async def test(req: Request):

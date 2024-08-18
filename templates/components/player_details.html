@@ -1,13 +1,10 @@
-<input type="hidden"
-       name="player_id"
-       value="{{ player.id }}" />
 <input type="text"
        name="name"
        placeholder="name"
        value="{{ player.name }}"
        onkeydown="return event.key != 'Enter';" />
 <select name="job">
-    {% for job in Job %}
-    <option {% if player.job==job %}selected{% endif %}>{{ job }}</option>
-    {% endfor %}
+       {% for job in Job %}
+       <option {% if player.job==job %}selected{% endif %}>{{ job }}</option>
+       {% endfor %}
 </select>
