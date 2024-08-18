@@ -27,8 +27,7 @@
                 "-i",
                 "styles/main.css",
                 "-o",
-                "static/css/main.css",
-                "--minify"
+                "static/css/main.css"
             ],
             "presentation": {
                 "reveal": "never",
