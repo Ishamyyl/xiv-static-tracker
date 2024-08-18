@@ -25,9 +25,9 @@
             "command": "tailwindcss",
             "args": [
                 "-i",
-                "main.css",
+                "styles/main.css",
                 "-o",
-                "static/main.css",
+                "static/css/main.css",
                 "--minify"
             ],
             "presentation": {
@@ -56,9 +56,9 @@
             "isBackground": true,
             "args": [
                 "-i",
-                "main.css",
+                "styles/main.css",
                 "-o",
-                "static/main.css",
+                "static/css/main.css",
                 "--watch"
             ],
             "presentation": {
