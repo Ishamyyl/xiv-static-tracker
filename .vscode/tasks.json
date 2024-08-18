@@ -1,0 +1,71 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Requirements",
+            "group": "build",
+            "type": "shell",
+            "command": "poetry",
+            "args": [
+                "export",
+                "-o",
+                "requirements.txt"
+            ],
+            "presentation": {
+                "reveal": "never",
+                "clear": true
+            }
+        },
+        {
+            "label": "Build CSS",
+            "group": "build",
+            "type": "shell",
+            "command": "tailwindcss",
+            "args": [
+                "-i",
+                "main.css",
+                "-o",
+                "static/main.css",
+                "--minify"
+            ],
+            "presentation": {
+                "reveal": "never",
+                "clear": true
+            }
+        },
+        {
+            "label": "Build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOrder": "parallel",
+            "dependsOn": [
+                "Build Requirements",
+                "Build CSS"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Watch CSS",
+            "group": "none",
+            "type": "shell",
+            "command": "tailwindcss",
+            "isBackground": true,
+            "args": [
+                "-i",
+                "main.css",
+                "-o",
+                "static/main.css",
+                "--watch"
+            ],
+            "presentation": {
+                "reveal": "never",
+                "clear": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
