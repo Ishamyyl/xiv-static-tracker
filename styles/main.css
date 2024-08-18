@@ -6,8 +6,4 @@
     column-gap: 0.5rem;
 }
 
-.test {
-    width: 70px;
-}
-
 @tailwind utilities;

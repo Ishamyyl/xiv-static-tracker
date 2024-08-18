@@ -560,10 +560,6 @@ video {
        column-gap: 0.5rem;
 }
 
-.test {
-  width: 70px;
-}
-
 .static {
   position: static;
 }
