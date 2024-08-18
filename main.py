@@ -75,7 +75,11 @@ class Players(HTTPEndpoint):
         return templates.TemplateResponse("components/player/index.html", {"request": req, "player": p})
 
     async def patch(self, req: Request):
-        data = await req.form()
+        data = dict(await req.form())
+        data["books_1"] = int(data["books_1"])
+        data["books_2"] = int(data["books_2"])
+        data["books_3"] = int(data["books_3"])
+        data["books_4"] = int(data["books_4"])
 
         # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
         q = Player.filter(id=req.path_params["player_id"]).update(**data).sql() + " RETURNING *"
@@ -107,7 +111,8 @@ class Groups(HTTPEndpoint):
         return RedirectResponse(req.url_for("groups", group_id=g.id), status_code=HTTP_303_SEE_OTHER)
 
     async def patch(self, req: Request):
-        data = await req.form()
+        data = dict(await req.form())
+        data["tier"] = int(data["tier"])
 
         # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
         q = Group.filter(id=req.path_params["group_id"]).update(**data).sql() + " RETURNING *"
