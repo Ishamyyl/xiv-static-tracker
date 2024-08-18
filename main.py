@@ -34,98 +34,92 @@ async def index(req: Request):
 
 class Gears(HTTPEndpoint):
     async def get(self, req: Request):
-        if g := await Gear.filter(id=req.query_params["gear_id"]).first():
-            return templates.TemplateResponse("pages/gear.html", {"request": req, "gear": g})
-        raise HTTPException(HTTP_404_NOT_FOUND)
+        if not (g := await Gear.filter(id=req.path_params["gear_id"]).first()):
+            raise HTTPException(HTTP_404_NOT_FOUND)
+        return templates.TemplateResponse("pages/gear.html", {"request": req, "gear": g})
 
     async def patch(self, req: Request):
-        async with req.form() as data:
-            data = dict(data)
-            gs_id = data.pop("gear_id")
+        data = await req.form()
 
-            # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
-            q = Gear.filter(id=gs_id).update(**data).sql() + " RETURNING *"
-            async with in_transaction() as conn:
-                r = (await conn.execute_query_dict(q, list(data.values())))[0]
+        # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
+        q = Gear.filter(id=req.path_params["gear_id"]).update(**data).sql() + " RETURNING *"
+        async with in_transaction() as conn:
+            r = (await conn.execute_query_dict(q, list(data.values())))[0]
 
-            if r:
-                g = Gear(**r)  # hydrate from raw cursor
-                return templates.TemplateResponse(
-                    "components/gear_details.html",
-                    {"request": req, "gear": g},
-                    headers={"HX-Trigger": f"reload-needs-{g.player_id}"},
-                )
+        if not r:
             raise HTTPException(HTTP_404_NOT_FOUND)
+
+        g = Gear(**r)  # hydrate from raw cursor
+        return templates.TemplateResponse(
+            "components/gear.html",
+            {"request": req, "gear": g},
+            headers={"HX-Trigger": f"reload-needs-{g.player_id}"},
+        )
 
 
 class Players(HTTPEndpoint):
     async def get(self, req: Request):
-        if p := await Player.filter(id=req.query_params["player_id"]).prefetch_related("gearset").first():
-            return templates.TemplateResponse("pages/player.html", {"request": req, "player": p})
-        raise HTTPException(HTTP_404_NOT_FOUND)
+        if not (p := await Player.filter(id=req.path_params["player_id"]).prefetch_related("gearset").first()):
+            raise HTTPException(HTTP_404_NOT_FOUND)
+        return templates.TemplateResponse("pages/player.html", {"request": req, "player": p})
 
     async def post(self, req: Request):
-        async with req.form() as data:
-            p = Player(group_id=data["group_id"])
+        data = await req.form()
+        p = Player(group_id=data["group_id"])
 
-            # TODO: database failure handling
-            await p.save()
-            await Gear.bulk_create([Gear(slot=s, player=p) for s in Slot])
-            await p.fetch_related("gearset")
+        # TODO: database failure handling
+        await p.save()
+        await Gear.bulk_create([Gear(slot=s, player=p) for s in Slot])
+        await p.fetch_related("gearset")
 
-            return templates.TemplateResponse("partials/player.html", {"request": req, "player": p})
+        return templates.TemplateResponse("components/player.html", {"request": req, "player": p})
 
     async def patch(self, req: Request):
-        async with req.form() as data:
-            data = dict(data)
-            p_id = str(data.pop("player_id"))
+        data = await req.form()
 
-            # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
-            q = Player.filter(id=p_id).update(**data).sql() + " RETURNING *"
-            async with in_transaction() as conn:
-                r = (await conn.execute_query_dict(q, list(data.values())))[0]
+        # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
+        q = Player.filter(id=req.path_params["player_id"]).update(**data).sql() + " RETURNING *"
+        async with in_transaction() as conn:
+            r = (await conn.execute_query_dict(q, list(data.values())))[0]
 
-            if r:
-                p = Player(**r)  # hydrate from raw cursor
-                return templates.TemplateResponse("components/player_details.html", {"request": req, "player": p})
+        if not r:
             raise HTTPException(HTTP_404_NOT_FOUND)
+        p = Player(**r)  # hydrate from raw cursor
+        return templates.TemplateResponse("components/player.html", {"request": req, "player": p})
 
 
 async def needs(req: Request):
-    if p := await Player.filter(id=req.query_params["player_id"]).prefetch_related("gearset").first():
-        return templates.TemplateResponse("components/player_needs.html", {"request": req, "player": p})
-    raise HTTPException(HTTP_404_NOT_FOUND)
+    if not (p := await Player.filter(id=req.path_params["player_id"]).prefetch_related("gearset").first()):
+        raise HTTPException(HTTP_404_NOT_FOUND)
+    return templates.TemplateResponse("components/needs.html", {"request": req, "player": p})
 
 
 class Groups(HTTPEndpoint):
     async def get(self, req: Request):
-        if g := await Group.filter(id=req.query_params["group_id"]).prefetch_related("players", "players__gearset").first():
-            return templates.TemplateResponse("pages/group.html", {"request": req, "group": g})
-        raise HTTPException(HTTP_404_NOT_FOUND)
+        if not (g := await Group.filter(id=req.path_params["group_id"]).prefetch_related("players", "players__gearset").first()):
+            raise HTTPException(HTTP_404_NOT_FOUND)
+        return templates.TemplateResponse("pages/group.html", {"request": req, "group": g})
 
     async def post(self, req: Request):
         g = Group()
         # TODO: handle database failures
         await g.save()
-        return RedirectResponse(
-            f'{req.url_for("groups")}?group_id={g.id}',
-            status_code=HTTP_303_SEE_OTHER,
-        )
+        return RedirectResponse(req.url_for("groups", group_id=g.id), status_code=HTTP_303_SEE_OTHER)
 
     async def patch(self, req: Request):
-        async with req.form() as data:
-            data = dict(data)
-            g_id = data.pop("group_id")
+        data = dict(await req.form())  # returns an "immutable multidict", so convert for .pop() convenience, see: https://www.starlette.io/requests/#request-files
+        g_id = data.pop("group_id")
 
-            # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
-            q = Group.filter(id=g_id).update(**data).sql() + " RETURNING *"
-            async with in_transaction() as conn:
-                r = (await conn.execute_query_dict(q, list(data.values())))[0]
+        # scuffed RETURNING, see https://github.com/tortoise/tortoise-orm/pull/1357
+        q = Group.filter(id=g_id).update(**data).sql() + " RETURNING *"
+        async with in_transaction() as conn:
+            r = (await conn.execute_query_dict(q, list(data.values())))[0]
 
-            if r:
-                g = Group(**r)  # hydrate from raw cursor
-                return templates.TemplateResponse("components/group_details.html", {"request": req, "group": g})
+        if not r:
             raise HTTPException(HTTP_404_NOT_FOUND)
+
+        g = Group(**r)  # hydrate from raw cursor
+        return templates.TemplateResponse("components/group.html", {"request": req, "group": g})
 
 
 async def test(req: Request):
@@ -164,10 +158,10 @@ app = Starlette(
     routes=[
         Route("/test", test),
         Mount("/static", StaticFiles(directory="static"), name="static"),
-        Route("/groups", Groups, name="groups"),
-        Route("/players", Players, name="players"),
-        Route("/gears", Gears, name="gears"),
-        Route("/needs", needs, name="needs"),
+        Route("/groups/{group_id:int}", Groups, name="groups"),
+        Route("/players/{player_id:int}", Players, name="players"),
+        Route("/gears/{gear_id:int}", Gears, name="gears"),
+        Route("/needs/{player_id:int}", needs, name="needs"),
         Route("/", index),
     ],
 )
