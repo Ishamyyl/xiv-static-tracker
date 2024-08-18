@@ -1,6 +1,6 @@
 <main class="grid grid-cols-4 min-w-max max-w-min border border-slate-100 border-solid">
     {% for player in group.players|sort(attribute='id') %}
-    {% include "partials/player.html" with context %}
+    {% include "components/player/index.html" with context %}
     {% endfor %}
 </main>
 <div class="flex-1 flex flex-col gap-4 p-4">
@@ -9,7 +9,7 @@
           hx-sync="this:replace"
           hx-boost="true"
           class="contents">
-        {% include "components/group_details.html" with context %}
+        {% include "components/group/details.html" with context %}
     </form>
     {% if group.players|length < 8 %} <form hx-post="{{ request.app.url_path_for('players', player_id=0) }}"
           hx-target="main"

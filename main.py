@@ -51,7 +51,7 @@ class Gears(HTTPEndpoint):
 
         g = Gear(**r)  # hydrate from raw cursor
         return templates.TemplateResponse(
-            "components/gear_details.html",
+            "components/gear/details.html",
             {"request": req, "gear": g},
             headers={"HX-Trigger": f"reload-needs-{g.player_id}"},
         )
@@ -72,7 +72,7 @@ class Players(HTTPEndpoint):
         await Gear.bulk_create([Gear(slot=s, player=p) for s in Slot])
         await p.fetch_related("gearset")
 
-        return templates.TemplateResponse("partials/player.html", {"request": req, "player": p})
+        return templates.TemplateResponse("components/player/index.html", {"request": req, "player": p})
 
     async def patch(self, req: Request):
         data = await req.form()
@@ -85,13 +85,13 @@ class Players(HTTPEndpoint):
         if not r:
             raise HTTPException(HTTP_404_NOT_FOUND)
         p = Player(**r)  # hydrate from raw cursor
-        return templates.TemplateResponse("components/player_details.html", {"request": req, "player": p})
+        return templates.TemplateResponse("components/player/details.html", {"request": req, "player": p})
 
 
 async def needs(req: Request):
     if not (p := await Player.filter(id=req.path_params["player_id"]).prefetch_related("gearset").first()):
         raise HTTPException(HTTP_404_NOT_FOUND)
-    return templates.TemplateResponse("components/player_needs.html", {"request": req, "player": p})
+    return templates.TemplateResponse("components/player/needs.html", {"request": req, "player": p})
 
 
 class Groups(HTTPEndpoint):
@@ -118,7 +118,7 @@ class Groups(HTTPEndpoint):
             raise HTTPException(HTTP_404_NOT_FOUND)
 
         g = Group(**r)  # hydrate from raw cursor
-        return templates.TemplateResponse("components/group_details.html", {"request": req, "group": g})
+        return templates.TemplateResponse("components/group/details.html", {"request": req, "group": g})
 
 
 async def test(req: Request):
