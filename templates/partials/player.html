@@ -2,7 +2,7 @@
     <form hx-patch="{{ request.app.url_path_for('players', player_id=player.id) }}"
           hx-trigger="input delay:1s"
           hx-sync="this:replace"
-          class="flex justify-between">
+          class="flex flex-col justify-between">
         {% include "components/player_details.html" with context %}
     </form>
     <div class="grid desired-current">

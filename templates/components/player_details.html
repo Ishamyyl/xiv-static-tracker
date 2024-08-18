@@ -1,10 +1,43 @@
-<input type="text"
-       name="name"
-       placeholder="name"
-       value="{{ player.name }}"
-       onkeydown="return event.key != 'Enter';" />
-<select name="job">
-       {% for job in Job %}
-       <option {% if player.job==job %}selected{% endif %}>{{ job }}</option>
-       {% endfor %}
-</select>
+<div class="flex flex-row">
+       <input type="text"
+              name="name"
+              placeholder="name"
+              value="{{ player.name }}"
+              onkeydown="return event.key != 'Enter';" />
+       <select name="job">
+              {% for job in Job %}
+              <option {% if player.job==job %}selected{% endif %}>{{ job }}</option>
+              {% endfor %}
+       </select>
+</div>
+<div class="flex flex-row justify-evenly gap-2">
+       <pre class="w-8">📚</pre>
+       <input type="number"
+              name="books_1"
+              id="books_1"
+              value="{{ player.books_1 }}"
+              min="0"
+              max="16"
+              class="w-8">
+       <input type="number"
+              name="books_2"
+              id="books_2"
+              value="{{ player.books_2 }}"
+              min="0"
+              max="16"
+              class="w-8">
+       <input type="number"
+              name="books_3"
+              id="books_3"
+              value="{{ player.books_3 }}"
+              min="0"
+              max="16"
+              class="w-8">
+       <input type="number"
+              name="books_4"
+              id="books_4"
+              value="{{ player.books_4 }}"
+              min="0"
+              max="16"
+              class="w-8">
+</div>
