@@ -1,6 +1,6 @@
 {% for turn, items_obj in player.needed_items().items() %}
 <div>
-    <pre>{{ turn }}</pre>
+    <pre>{{ turn + (4 * (player.group.tier - 1)) }}</pre>
     {% for item in items_obj['gear'] %}
     <pre>{{ item }}</pre>
     {% endfor %}

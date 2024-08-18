@@ -2,6 +2,15 @@
        placeholder="name"
        name="name"
        value="{{ group.name }}" />
+<div>
+       <label for="tier">Tier:</label>
+       <input type="number"
+              placeholder="tier"
+              name="tier"
+              value="{{ group.tier }}"
+              min="1"
+              max="4" />
+</div>
 <textarea name="description"
           placeholder="description"
           rows="10"

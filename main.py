@@ -59,7 +59,7 @@ class Gears(HTTPEndpoint):
 
 class Players(HTTPEndpoint):
     async def get(self, req: Request):
-        if not (p := await Player.filter(id=req.path_params["player_id"]).prefetch_related("gearset").first()):
+        if not (p := await Player.filter(id=req.path_params["player_id"]).prefetch_related("gearset", "group").first()):
             raise HTTPException(HTTP_404_NOT_FOUND)
         return templates.TemplateResponse("pages/player.html", {"request": req, "player": p})
 
@@ -96,7 +96,7 @@ async def needs(req: Request):
 
 class Groups(HTTPEndpoint):
     async def get(self, req: Request):
-        if not (g := await Group.filter(id=req.path_params["group_id"]).prefetch_related("players", "players__gearset").first()):
+        if not (g := await Group.filter(id=req.path_params["group_id"]).prefetch_related("players", "players__gearset", "players__group").first()):
             raise HTTPException(HTTP_404_NOT_FOUND)
         return templates.TemplateResponse("pages/group.html", {"request": req, "group": g})
 
