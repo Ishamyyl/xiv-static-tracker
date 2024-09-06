@@ -5,5 +5,5 @@ Track a static's raid progress through the tier
 - [ ] DB export
 - [ ] Gear needed by Group per Turn
 - [ ] JSON export/import
-- [ ] Book tracker
-- [ ] Better LoB for tmplates / Jinja2 partials
+- [x] Book tracker
+- [ ] Better LoB for templates / Jinja2 partials

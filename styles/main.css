@@ -6,4 +6,10 @@
     column-gap: 0.5rem;
 }
 
+td, th {
+    border: 2px solid rgb(241 245 249 / var(--tw-border-opacity));
+    text-align: start;
+    padding: 1px 20px;
+}
+
 @tailwind utilities;
