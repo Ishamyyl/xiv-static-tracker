@@ -1,9 +1,8 @@
-# ffxiv_raid_gear_tracker
-Track a static's raid progress through the tier
-
-# TODOs
-- [ ] DB export
-- [ ] Gear needed by Group per Turn
-- [ ] JSON export/import
-- [x] Book tracker
-- [ ] Better LoB for templates / Jinja2 partials
+1. install uv
+2. uv, install python
+3. uv, pin python version
+4. uv, install ruff
+5. uv, init
+6. make sure .venv is used by vscode
+7. uv, add deps
+8. restart vscode

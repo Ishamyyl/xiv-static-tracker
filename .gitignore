@@ -13,5 +13,6 @@ target/
 
 # python
 __pycache__/
+.venv/
 
 bak/

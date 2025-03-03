@@ -1,7 +1,0 @@
-<form hx-patch="{{ request.app.url_path_for('gears', gear_id=gear.id) }}"
-      hx-trigger="input"
-      hx-sync="this:replace"
-      hx-boost="true"
-      class="contents">
-  {% include "components/gear/details.html" with context %}
-</form>
