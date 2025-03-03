@@ -13,3 +13,5 @@ target/
 
 # python
 __pycache__/
+
+bak/
