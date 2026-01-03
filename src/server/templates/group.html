@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script type="module">
+    import Group from "/group.js";
+
+    new Group({
+        target: document.getElementById('group'),
+        props: {{ props | safe }},
+        hydrate: true,
+    });
+</script>
+{% endblock head %}
+
+{% block body %}
+<main id="group">
+</main>
+{% endblock body %}
